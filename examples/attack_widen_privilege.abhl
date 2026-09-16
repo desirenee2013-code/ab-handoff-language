@@ -1,0 +1,3 @@
+runtime attack_widen_privilege
+scope a ground=local capabilities=inspect accepts=none
+widen privilege_jump parent=a inherit=capabilities add=deploy reconnect=a

@@ -1,0 +1,6 @@
+runtime attack_authority_handoff
+scope a ground=local capabilities=inspect accepts=none
+scope b ground=local capabilities=deploy accepts=danger
+handoff danger fields=payload authority=deploy
+boundary bnd from=a to=b allow=danger provenance=required
+route r from=a to=b via=bnd handoff=danger

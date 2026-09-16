@@ -1,0 +1,18 @@
+# Valid A/B handoff-runtime example.
+runtime ci_demo
+
+scope dependency ground=local capabilities=inspect_repo accepts=ci_failure,integration_result
+scope integration ground=local capabilities=run_tests accepts=integration_handoff
+
+handoff ci_failure fields=message,provenance authority=none
+handoff integration_handoff fields=target,constraints,provenance,return_route authority=none
+handoff integration_result fields=result,provenance,source_handoff authority=none
+
+boundary dep_to_integration from=dependency to=integration allow=integration_handoff provenance=required
+boundary integration_to_dep from=integration to=dependency allow=integration_result provenance=required
+
+branch integration_check owner=integration accepts=integration_handoff returns=integration_result
+route dep_handoff from=dependency to=integration via=dep_to_integration handoff=integration_handoff
+route dep_result from=integration to=dependency via=integration_to_dep handoff=integration_result
+
+widen environment_repair parent=dependency inherit=capabilities add=none reconnect=dependency

@@ -1,0 +1,4 @@
+runtime attack_remote_mutation
+scope a ground=local capabilities=none accepts=none
+scope b ground=local capabilities=none accepts=none
+mutate steal_ground from=a target=b.ground
